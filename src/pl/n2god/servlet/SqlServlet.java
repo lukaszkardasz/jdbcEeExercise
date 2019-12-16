@@ -23,7 +23,13 @@ public class SqlServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = request.getParameter("get");
 		if ("show".equals(param)) {
-			List<City> cityList = getCities();
+			List<City> cityList = null;
+			try {
+				cityList = getCities();
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+				response.sendError(500); //nie udało się pobrać danych
+			}
 			request.setAttribute("cityList", cityList);
 			request.getRequestDispatcher("cityList.jsp").forward(request, response);
 		} else {
@@ -31,7 +37,7 @@ public class SqlServlet extends HttpServlet {
 		}
 	}
 
-	private List<City> getCities() throws ClassNotFoundException {
+	private List<City> getCities() throws ClassNotFoundException, SQLException {
 		final String driver = "com.mysql.jf.jdbc.Driver";
 		Class.forName(driver);
 
@@ -41,21 +47,17 @@ public class SqlServlet extends HttpServlet {
 
 		try (Connection connection = DriverManager.getConnection(dbPath, "user", "password");
 		     Statement statement = connection.createStatement();
-		     ResultSet resultSet = statement.executeQuery(sqlQuery))
-		{
+		     ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 			String cityName = null;
 			int cityPopulation = 0;
 			cityList = new ArrayList<>();
-			while (resultSet.next()){
+			while (resultSet.next()) {
 				cityName = resultSet.getString("Name");
 				cityPopulation = resultSet.getInt("Population");
 				City city = new City(cityName, cityPopulation);
+				cityList.add(city);
 			}
-
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+			return cityList;
 		}
-
 	}
 }
