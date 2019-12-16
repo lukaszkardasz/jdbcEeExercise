@@ -20,7 +20,7 @@
   <div>
     Wybierz opcję:
     <br>
-    <a href="SqlServlet?get=show">Pokaż wszystkie miasta</a> //parametr odpowiedni nadajemy - Yodaa
+    <a href="SqlServlet?get=show">Pokaż wszystkie miasta</a> <%--parametr odpowiedni nadajemy - Yodaa--%>
   </div>
   </body>
 </html>

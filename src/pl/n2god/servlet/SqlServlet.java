@@ -23,22 +23,21 @@ public class SqlServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = request.getParameter("get");
 		if ("show".equals(param)) {
-			List<City> cityList = null;
 			try {
-				cityList = getCities();
+				List<City> cityList = getCities();
+				request.setAttribute("cityList", cityList);
+				request.getRequestDispatcher("cityList.jsp").forward(request, response);
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 				response.sendError(500); //nie udało się pobrać danych
 			}
-			request.setAttribute("cityList", cityList);
-			request.getRequestDispatcher("cityList.jsp").forward(request, response);
 		} else {
 			response.sendError(403);
 		}
 	}
 
 	private List<City> getCities() throws ClassNotFoundException, SQLException {
-		final String driver = "com.mysql.jf.jdbc.Driver";
+		final String driver = "com.mysql.cj.jdbc.Driver";
 		Class.forName(driver);
 
 		List<City> cityList = null;
