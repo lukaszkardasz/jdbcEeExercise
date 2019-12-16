@@ -42,7 +42,7 @@ public class SqlServlet extends HttpServlet {
 
 		List<City> cityList = null;
 		final String dbPath = "jdbc:mysql://localhost:3306/world?serverTimezone=UTC";
-		final String sqlQuery = "SELECT Name, Population FROM city";
+		final String sqlQuery = "SELECT Name, Population FROM city ORDER BY Population DESC";
 
 		try (Connection connection = DriverManager.getConnection(dbPath, "user", "password");
 		     Statement statement = connection.createStatement();
