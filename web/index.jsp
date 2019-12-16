@@ -21,6 +21,9 @@
     Wybierz opcję:
     <br>
     <a href="SqlServlet?get=show">Pokaż wszystkie miasta</a> <%--parametr odpowiedni nadajemy - Yodaa--%>
+    <br/>
+    <a href="SqlServlet?getSorted=show">Pokaż wszystkie miasta posortowane</a> <%--parametr odpowiedni nadajemy - Yodaa--%>
+
   </div>
   </body>
 </html>

@@ -39,7 +39,7 @@ public class SqlServlet extends HttpServlet {
 		try {
 			List<City> cityList = getCities();
 			if (isSorted){
-				cityList.sort(Comparator.comparingInt(City::getPopulation));
+				cityList.sort(Comparator.comparingInt(City::getPopulation).reversed());
 			}
 			request.setAttribute("cityList", cityList);
 			request.getRequestDispatcher("cityList.jsp").forward(request, response);
