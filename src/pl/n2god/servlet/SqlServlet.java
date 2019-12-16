@@ -11,6 +11,7 @@ import javax.xml.transform.Result;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -22,17 +23,29 @@ public class SqlServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = request.getParameter("get");
+		String paramSorted = request.getParameter("getSorted");
 		if ("show".equals(param)) {
-			try {
-				List<City> cityList = getCities();
-				request.setAttribute("cityList", cityList);
-				request.getRequestDispatcher("cityList.jsp").forward(request, response);
-			} catch (ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
-				response.sendError(500); //nie udało się pobrać danych
-			}
-		} else {
+			getList(request, response, false);
+		}
+		else if ("show".equals(paramSorted)) {
+			getList(request, response, true);
+		}
+		else {
 			response.sendError(403);
+		}
+	}
+
+	private void getList(HttpServletRequest request, HttpServletResponse response, boolean isSorted) throws ServletException, IOException {
+		try {
+			List<City> cityList = getCities();
+			if (isSorted){
+				cityList.sort(Comparator.comparingInt(City::getPopulation));
+			}
+			request.setAttribute("cityList", cityList);
+			request.getRequestDispatcher("cityList.jsp").forward(request, response);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			response.sendError(500); //nie udało się pobrać danych
 		}
 	}
 
@@ -42,7 +55,7 @@ public class SqlServlet extends HttpServlet {
 
 		List<City> cityList = null;
 		final String dbPath = "jdbc:mysql://localhost:3306/world?serverTimezone=UTC";
-		final String sqlQuery = "SELECT Name, Population FROM city ORDER BY Population DESC";
+		final String sqlQuery = "SELECT Name, Population FROM city";
 
 		try (Connection connection = DriverManager.getConnection(dbPath, "user", "password");
 		     Statement statement = connection.createStatement();
