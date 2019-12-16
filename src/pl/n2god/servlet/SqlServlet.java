@@ -13,11 +13,8 @@ import java.io.IOException;
  */
 @WebServlet(name = "SqlServlet", urlPatterns = "/SqlServlet")
 public class SqlServlet extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		String param = request.getParameter("get");
 	}
 }
